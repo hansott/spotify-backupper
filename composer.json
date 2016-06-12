@@ -1,0 +1,38 @@
+{
+    "name": "hansott/spotify-backupper",
+    "type": "library",
+    "description": "Creates backups of your Spotify library",
+    "keywords": [
+        "hansott",
+        "spotify-backupper"
+    ],
+    "homepage": "https://github.com/hansott/spotify-backupper",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hans Ott",
+            "email": "hansott@hotmail.be",
+            "homepage": "https://hansott.github.io",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php" : "~5.5|~7.0",
+        "dropbox/dropbox-sdk": "^1.1",
+        "kriswallsmith/buzz": "^0.15.0",
+        "nategood/commando": "^0.2.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "HansOtt\\SpotifyBackupper\\": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "bin": [
+        "bin/spotify-backupper"
+    ]
+}

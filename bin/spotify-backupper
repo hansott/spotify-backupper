@@ -1,0 +1,73 @@
+#! /usr/bin/env php
+<?php
+
+error_reporting(E_ERROR);
+ini_set('display_errors', 'on');
+
+if (php_sapi_name() != 'cli') exit('Please run this file on the command line. E.g. `spotify-backupper`' . PHP_EOL);
+
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) { // Installed Locally
+    require __DIR__ . '/../vendor/autoload.php';
+} elseif (file_exists(__DIR__ . '/../../../autoload.php')) { // Installed Globally
+    require __DIR__ . '/../../../autoload.php';
+} else {
+    exit('Make sure you run `composer install` first, before running spotify-backupper');
+}
+
+$encoderFactory = new \HansOtt\SpotifyBackupper\Encoder\EncoderFactory();
+$encoderFactory->registerEncoder('json', new \HansOtt\SpotifyBackupper\Encoder\EncoderJson());
+$encoderFactory->registerEncoder('xml', new \HansOtt\SpotifyBackupper\Encoder\EncoderXml());
+
+$backupStorageFactory = new \HansOtt\SpotifyBackupper\BackupStorage\BackupStorageFactory();
+$backupStorageFactory->registerStorage('local', function () use ($cli) {
+    return new \HansOtt\SpotifyBackupper\BackupStorage\BackupStorageLocal();
+});
+$backupStorageFactory->registerStorage('dropbox', function () {
+    if (getenv('DROPBOX_ACCESS_TOKEN') === false) {
+        echo sprintf('Please set your Dropbox access token in the environment variable "DROPBOX_ACCESS_TOKEN".') . PHP_EOL;
+        echo 'You can generate an access token here: https://www.dropbox.com/developers/apps' . PHP_EOL;
+        echo '1. Create an application with permission type: "App folder".' . PHP_EOL;
+        echo '2. Click generate access token.' . PHP_EOL;
+        exit(1);
+    }
+
+    $client = new Dropbox\Client(getenv('DROPBOX_ACCESS_TOKEN'), 'SpotifyBackupper');
+
+    return new \HansOtt\SpotifyBackupper\BackupStorage\BackupStorageDropbox($client);
+});
+
+$cli = new Commando\Command();
+
+$cli->option('format')
+    ->must(function ($format) use ($encoderFactory) {
+        return $encoderFactory->isSupported($format);
+    })
+    ->describedAs('The format for encoding your Spotify library. (json or xml)');
+
+$cli->option('storage')
+    ->must(function ($storageKey) use ($backupStorageFactory) {
+        return $backupStorageFactory->isSupported($storageKey);
+    })
+    ->describedAs('The backup storage. (local or dropbox)');
+
+$cli->option('with-collaborative')
+    ->aka('with-collab')
+    ->boolean()
+    ->describedAs('Whether to include collaborative playlists.');
+
+$encoder = $encoderFactory->getEncoder($cli['format'] ?: 'json');
+$backupStorage = $backupStorageFactory->createStorage($cli['storage'] ?: 'local');
+
+if (getenv('SPOTIFY_ACCESS_TOKEN') === false) {
+    echo sprintf('Please set your Spotify access token in the environment variable "SPOTIFY_ACCESS_TOKEN".') . PHP_EOL;
+    echo 'You can generate an access token here: https://developer.spotify.com/web-api/console/get-current-user-playlists/' . PHP_EOL;
+    echo '1. Click "GET OAUTH TOKEN".' . PHP_EOL;
+    echo '2. Click "REQUEST TOKEN" with the required scopes: playlist-read-private, playlist-read-collaborative & user-library-read.' . PHP_EOL;
+    exit(1);
+}
+
+$buzzClient = new \Buzz\Client\Curl();
+$client = new \HansOtt\SpotifyBackupper\Client\ClientBuzz($buzzClient, getenv('SPOTIFY_ACCESS_TOKEN'));
+$backupper = new \HansOtt\SpotifyBackupper\Backupper($client, $encoder, $backupStorage);
+$backupper->backup($cli['with-collaborative'] ? true : false);
+
