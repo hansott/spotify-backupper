@@ -19,7 +19,7 @@ $encoderFactory->registerEncoder('json', new \HansOtt\SpotifyBackupper\Encoder\E
 $encoderFactory->registerEncoder('xml', new \HansOtt\SpotifyBackupper\Encoder\EncoderXml());
 
 $backupStorageFactory = new \HansOtt\SpotifyBackupper\BackupStorage\BackupStorageFactory();
-$backupStorageFactory->registerStorage('local', function () use ($cli) {
+$backupStorageFactory->registerStorage('local', function () {
     return new \HansOtt\SpotifyBackupper\BackupStorage\BackupStorageLocal();
 });
 $backupStorageFactory->registerStorage('dropbox', function () {
