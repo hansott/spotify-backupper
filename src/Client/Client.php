@@ -38,4 +38,14 @@ interface Client
      * @return Track[]
      */
     public function getSavedTracks($limit = 20, $offset = 0);
+
+    /**
+     * Get the user's saved albums.
+     *
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return Album[]
+     */
+    public function getSavedAlbums($limit = 20, $offset = 0);
 }
