@@ -10,6 +10,7 @@ use Buzz\Client\ClientInterface;
 use HansOtt\SpotifyBackupper\Spotify\Track;
 use HansOtt\SpotifyBackupper\Spotify\Artist;
 use HansOtt\SpotifyBackupper\Spotify\Playlist;
+use HansOtt\SpotifyBackupper\Spotify\Album;
 
 final class ClientBuzz implements Client
 {
@@ -115,5 +116,33 @@ final class ClientBuzz implements Client
         );
 
         return $this->convertResponseToTracks($data);
+    }
+
+    public function getSavedAlbums($limit = 20, $offset = 0)
+    {
+        $data = $this->performRequest(
+            '/v1/me/albums',
+            array(
+                'limit' => (int) $limit,
+                'offset' => (int) $offset,
+            )
+        );
+
+        return $this->convertResponseToAlbums($data);
+    }
+
+    private function convertResponseToAlbums($data)
+    {
+        $albums = isset($data['items']) && is_array($data['items']) ? $data['items'] : array();
+
+        return array_map(function (array $album) {
+            $album = $album['album'];
+
+            $artists = array_map(function (array $artist) {
+                return new Artist($artist['id'], $artist['name'], $artist['uri']);
+            }, $album['artists']);
+
+            return new Album($album['id'], $album['name'], $album['uri'], $artists);
+        }, $albums);
     }
 }
