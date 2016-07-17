@@ -83,7 +83,7 @@ final class Backupper
         $data = $this->encoder->encode($data);
         $filePath = sprintf('saved-tracks-%s.%s', date('Y-m-d'), $this->encoder->getFileExtension());
         $this->backupStorage->writeFile($filePath, $data);
-        echo sprintf('Created backup of saved tracks.') . PHP_EOL;
+        echo 'Created backup of saved tracks.' . PHP_EOL;
 
         echo 'Getting saved albums...' . PHP_EOL;
 
@@ -105,7 +105,7 @@ final class Backupper
         $data = $this->encoder->encode($data);
         $filePath = sprintf('saved-albums-%s.%s', date('Y-m-d'), $this->encoder->getFileExtension());
         $this->backupStorage->writeFile($filePath, $data);
-        echo sprintf('Created backup of saved albums.') . PHP_EOL;
+        echo 'Created backup of saved albums.' . PHP_EOL;
 
         echo 'Finished' . PHP_EOL;
     }
