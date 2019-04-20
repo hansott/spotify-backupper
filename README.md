@@ -1,11 +1,10 @@
-# Spotify Backupper
+# ![Spotify Backupper](art/spotify-backupper.jpg)
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
 [![Total Downloads][ico-downloads]][link-downloads]
 
-
-Creates backups of your spotify library.
+If you like this package, feel free to [buy me a coffee](https://www.paypal.me/HansOtt/5) ☕️.
 
 ## Install
 
