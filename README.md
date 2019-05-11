@@ -42,6 +42,8 @@ $ cd my-backup-dir
 $ SPOTIFY_ACCESS_TOKEN=yourToken path/to/spotify-backupper
 ```
 
+If you don't know how to get an access token, just run `$ spotify-backupper` without `SPOTIFY_ACCESS_TOKEN` to see instructions.
+
 ### Create a backup on Dropbox
 
 ```
@@ -58,7 +60,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) and [CONDUCT](CONDUCT.md) for details
 
 ## Security
 
-If you discover any security related issues, please email **hansott at hotmail be** instead of using the issue tracker.
+If you discover any security related issues, please email **hans at iott consulting** instead of using the issue tracker.
 
 ## Credits
 
