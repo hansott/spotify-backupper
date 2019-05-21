@@ -60,7 +60,7 @@ $backupStorage = $backupStorageFactory->createStorage($cli['storage'] ?: 'local'
 
 if (getenv('SPOTIFY_ACCESS_TOKEN') === false) {
     echo sprintf('Please set your Spotify access token in the environment variable "SPOTIFY_ACCESS_TOKEN".') . PHP_EOL;
-    echo 'You can generate an access token here: https://beta.developer.spotify.com/console/get-current-user-saved-tracks/' . PHP_EOL;
+    echo 'You can generate an access token here: https://developer.spotify.com/console/get-current-user-saved-tracks/' . PHP_EOL;
     echo '1. Click "GET OAUTH TOKEN".' . PHP_EOL;
     echo '2. Click "REQUEST TOKEN" with the required scopes: playlist-read-private, playlist-read-collaborative & user-library-read.' . PHP_EOL;
     exit(1);
